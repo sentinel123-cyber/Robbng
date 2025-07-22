@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel's Cyber Arsenal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Space Mono (for hacker vibe) and Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for hacker aesthetic and animations */
+        body {
+            font-family: 'Space Mono', monospace; /* Primary hacker font */
+            background-color: #0a0a0a; /* Deep dark background */
+            color: #00ff00; /* Neon green text */
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Glitch effect for Sentinel name */
+        .glitch-text {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            color: #00ff00;
+            text-shadow:
+                0.05em 0 0 #00ffff,
+                -0.03em -0.04em 0 #ff00ff,
+                0.02em 0.05em 0 #ffff00;
+            animation: glitch 1s infinite;
+            position: relative;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow:
+                    0.05em 0 0 #00ffff,
+                    -0.03em -0.04em 0 #ff00ff,
+                    0.02em 0.05em 0 #ffff00;
+                transform: translate(0);
+            }
+            20% {
+                text-shadow:
+                    -0.05em -0.02em 0 #00ffff,
+                    0.04em 0.03em 0 #ff00ff,
+                    -0.01em -0.03em 0 #ffff00;
+                transform: translate(-0.02em, 0.02em);
+            }
+            40% {
+                text-shadow:
+                    0.03em 0.03em 0 #00ffff,
+                    -0.05em -0.05em 0 #ff00ff,
+                    0.01em 0.02em 0 #ffff00;
+                transform: translate(0.01em, -0.01em);
+            }
+            60% {
+                text-shadow:
+                    -0.04em 0.01em 0 #00ffff,
+                    0.02em -0.02em 0 #ff00ff,
+                    -0.03em 0.04em 0 #ffff00;
+                transform: translate(-0.03em, 0);
+            }
+            80% {
+                text-shadow:
+                    0.01em -0.03em 0 #00ffff,
+                    -0.02em 0.05em 0 #ff00ff,
+                    0.04em -0.01em 0 #ffff00;
+                transform: translate(0.02em, -0.02em);
+            }
+            100% {
+                text-shadow:
+                    0.05em 0 0 #00ffff,
+                    -0.03em -0.04em 0 #ff00ff,
+                    0.02em 0.05em 0 #ffff00;
+                transform: translate(0);
+            }
+        }
+
+        /* Matrix rain canvas */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2; /* Subtle background effect */
+        }
+
+        /* Terminal-like input/output */
+        .terminal-input, .terminal-output {
+            background-color: #1a1a1a;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            color: #00ff00;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Button styles */
+        .btn-hacker {
+            background-color: #00ff00;
+            color: #0a0a0a;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Full rounded */
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px #00ff00;
+            border: 2px solid #00ff00;
+        }
+        .btn-hacker:hover {
+            background-color: #00cc00;
+            box-shadow: 0 0 25px #00ff00;
+            transform: scale(1.05);
+        }
+
+        /* Card styles */
+        .product-card {
+            background-color: #1a1a1a;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            transition: all 0.3s ease;
+            transform: skewX(-5deg); /* Slight skew for unique effect */
+        }
+        .product-card:hover {
+            transform: scale(1.03) skewX(-5deg);
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        /* Typing effect for tagline */
+        .typing-effect {
+            overflow: hidden; /* Ensures the text is not visible until typed */
+            white-space: nowrap; /* Keeps the content on a single line */
+            border-right: .15em solid #00ff00; /* The blinking cursor */
+            animation:
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+            width: 0; /* Start with zero width */
+        }
+
+        /* Typing animation */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Blinking cursor animation */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00ff00; }
+        }
+    </style>
+</head>
+<body class="bg-gray-950 text-green-400 min-h-screen flex flex-col">
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrixCanvas"></canvas>
+
+    <!-- Header -->
+    <header class="relative z-10 py-6">
+        <nav class="container mx-auto px-4 flex justify-between items-center">
+            <div class="text-4xl lg:text-5xl font-bold glitch-text">SENTINEL</div>
+            <ul class="hidden md:flex space-x-8 text-lg">
+                <li><a href="#home" class="hover:text-white transition duration-300">Home</a></li>
+                <li><a href="#tools" class="hover:text-white transition duration-300">Tools</a></li>
+                <li><a href="#apps" class="hover:text-white transition duration-300">Apps</a></li>
+                <li><a href="#about" class="hover:text-white transition duration-300">About</a></li>
+                <li><a href="#contact" class="hover:text-white transition duration-300">Contact</a></li>
+            </ul>
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button class="md:hidden text-green-400 hover:text-white focus:outline-none" aria-label="Toggle menu">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu Overlay -->
+        <div id="mobileMenu" class="hidden md:hidden fixed inset-0 bg-gray-950 bg-opacity-95 z-20 flex flex-col items-center justify-center space-y-8 text-2xl">
+            <button class="absolute top-6 right-6 text-green-400 hover:text-white focus:outline-none" aria-label="Close menu">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <a href="#home" class="hover:text-white transition duration-300" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Home</a>
+            <a href="#tools" class="hover:text-white transition duration-300" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Tools</a>
+            <a href="#apps" class="hover:text-white transition duration-300" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Apps</a>
+            <a href="#about" class="hover:text-white transition duration-300" onclick="document.getElementById('mobileMenu').classList.add('hidden')">About</a>
+            <a href="#contact" class="hover:text-white transition duration-300" onclick="document.getElementById('mobileMenu').classList.add('hidden')">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative z-10 flex-grow flex flex-col items-center justify-center text-center p-4">
+        <h1 class="text-6xl md:text-8xl font-bold mb-4 glitch-text">SENTINEL</h1>
+        <p class="text-xl md:text-3xl mb-8 typing-effect">
+            Mastering the Digital Frontier.
+        </p>
+        <div class="space-x-4">
+            <a href="#tools" class="btn-hacker">Explore Arsenal</a>
+            <a href="#contact" class="btn-hacker bg-transparent border-2 border-green-400 text-green-400 hover:bg-green-400 hover:text-gray-950">Secure Contact</a>
+        </div>
+    </section>
+
+    <!-- Hacking Tools Section -->
+    <section id="tools" class="relative z-10 py-20 bg-gray-900 border-t-2 border-b-2 border-green-700">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-green-400 mb-12">Hacking Tools <span class="text-gray-500">(For Educational & Ethical Use Only)</span></h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <!-- Tool Card 1 -->
+                <div class="product-card p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-300 mb-4">Network Scanner Pro</h3>
+                    <p class="text-gray-300 mb-4">Advanced port scanning, vulnerability detection, and network mapping for robust security analysis.</p>
+                    <p class="text-3xl font-bold text-green-400 mb-4">$199.99</p>
+                    <button class="btn-hacker">Acquire</button>
+                </div>
+                <!-- Tool Card 2 -->
+                <div class="product-card p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-300 mb-4">Crypto Decryptor X</h3>
+                    <p class="text-gray-300 mb-4">Simulate brute-force decryption on crypto wallets to understand security flaws. (Strictly for research).</p>
+                    <p class="text-3xl font-bold text-green-400 mb-4">$499.99</p>
+                    <button class="btn-hacker">Acquire</button>
+                </div>
+                <!-- Tool Card 3 -->
+                <div class="product-card p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold text-green-300 mb-4">Stealth VPN Elite</h3>
+                    <p class="text-gray-300 mb-4">Unbreakable encryption and anonymous browsing for ultimate online privacy and security.</p>
+                    <p class="text-3xl font-bold text-green-400 mb-4">$49.99/month</p>
+                    <button class="btn-hacker">Acquire</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Apps Section -->
+    <section id="apps" class="relative z-10 py-20 bg-gray-950">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-green-400 mb-12">Premium Applications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- App Card 1 -->
+                <div class="product-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-300 mb-3">CapCut Pro</h3>
+                    <p class="text-gray-300 mb-3">Unlock all premium features, no watermark, advanced editing.</p>
+                    <p class="text-2xl font-bold text-green-400 mb-4">$15</p>
+                    <button class="btn-hacker text-sm">Download</button>
+                </div>
+                <!-- App Card 2 -->
+                <div class="product-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-300 mb-3">Spotify Premium</h3>
+                    <p class="text-gray-300 mb-3">Ad-free music, offline downloads, high-quality audio.</p>
+                    <p class="text-2xl font-bold text-green-400 mb-4">$10</p>
+                    <button class="btn-hacker text-sm">Download</button>
+                </div>
+                <!-- App Card 3 -->
+                <div class="product-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-300 mb-3">eFootball Unlimited Coins</h3>
+                    <p class="text-gray-300 mb-3">Max out your coins and GP for ultimate team building.</p>
+                    <p class="text-2xl font-bold text-green-400 mb-4">$25</p>
+                    <button class="btn-hacker text-sm">Download</button>
+                </div>
+                <!-- App Card 4 -->
+                <div class="product-card p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-semibold text-green-300 mb-3">CODM Pro Pack</h3>
+                    <p class="text-gray-300 mb-3">Access all weapons, exclusive skins, and battle pass.</p>
+                    <p class="text-2xl font-bold text-green-400 mb-4">$30</p>
+                    <button class="btn-hacker text-sm">Download</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="relative z-10 py-20 bg-gray-900 border-t-2 border-green-700">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-green-400 mb-12">About Sentinel</h2>
+            <div class="max-w-3xl mx-auto text-lg text-gray-300 leading-relaxed terminal-output">
+                <p class="mb-4"><span class="text-green-400">root@sentinel:~#</span> echo "Who am I?"</p>
+                <p class="mb-4">I am Sentinel, a digital architect and a guardian of the cyber realm. My journey into the intricate world of algorithms and data began at <span class="text-green-400">Lagos State University (LASU)</span>, where I delved deep into the complexities of <span class="text-green-400">MATHEMATICS</span>.</p>
+                <p>This foundation equipped me with the logical prowess to dissect, understand, and ultimately master the digital frontier. My mission is to provide cutting-edge tools and solutions, empowering individuals to navigate the digital landscape with unparalleled control and insight.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="relative z-10 py-20 bg-gray-950 border-t-2 border-green-700">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold text-green-400 mb-12">Initiate Secure Connection</h2>
+            <div class="max-w-xl mx-auto terminal-output p-8 rounded-xl shadow-lg">
+                <p class="text-lg text-gray-300 mb-8">
+                    To establish contact, use the following encrypted channels:
+                </p>
+                <div class="space-y-4 text-left">
+                    <p><span class="text-green-400">Email:</span> <a href="mailto:samuelabebe005@gmail.com" class="text-blue-400 hover:underline">samuelabebe005@gmail.com</a></p>
+                    <p><span class="text-green-400">Phone:</span> <a href="tel:+2348146198806" class="text-blue-400 hover:underline">+234-814-619-8806</a></p>
+                </div>
+                <form class="mt-8 space-y-6">
+                    <div>
+                        <input type="text" placeholder="Your Alias" class="terminal-input w-full p-4 rounded-lg bg-gray-800 text-green-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200" required>
+                    </div>
+                    <div>
+                        <input type="email" placeholder="Your Encrypted Email" class="terminal-input w-full p-4 rounded-lg bg-gray-800 text-green-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200" required>
+                    </div>
+                    <div>
+                        <textarea placeholder="Your Message (Encrypted)" rows="6" class="terminal-input w-full p-4 rounded-lg bg-gray-800 text-green-400 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-200" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-hacker w-full">Transmit Data</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 bg-gray-900 text-center text-gray-500 text-sm border-t-2 border-green-700">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2025 Sentinel. All rights reserved. Code is power.</p>
+            <p class="mt-2">Built with precision and a touch of the dark web.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Matrix Rain Effect ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to full window
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Characters for the rain
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}\\|;:\'",<.>/?`~';
+        const fontSize = 16;
+        const columns = canvas.width / fontSize; // Number of columns for the rain
+
+        // Array to store the y-position of each character in each column
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1; // Start at the top
+        }
+
+        // Drawing the characters
+        function drawMatrix() {
+            // Semi-transparent black rectangle to create the trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ff00'; // Neon green color for characters
+            ctx.font = `${fontSize}px 'Space Mono', monospace`;
+
+            // Loop through each drop
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Send the drop back to the top randomly
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                // Increment y-position
+                drops[i]++;
+            }
+        }
+
+        // Adjust canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate columns for new width
+            const newColumns = canvas.width / fontSize;
+            while (drops.length < newColumns) {
+                drops.push(1);
+            }
+            drops.length = newColumns; // Trim if window shrinks
+        });
+
+        // Start the matrix animation
+        setInterval(drawMatrix, 33); // Roughly 30 frames per second
+
+        // --- Smooth Scrolling for Navigation ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // --- Mobile Menu Toggle ---
+        const mobileMenuButton = document.querySelector('header button');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const closeMenuButton = mobileMenu.querySelector('button');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.remove('hidden');
+        });
+
+        closeMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.add('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
