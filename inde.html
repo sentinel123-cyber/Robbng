@@ -1,0 +1,170 @@
+from zipfile import ZipFile
+import os
+
+# Create directory structure
+base_dir = "/mnt/data/spy-sim"
+os.makedirs(base_dir, exist_ok=True)
+
+# HTML: index.html
+index_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spy Simulation Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Welcome to Spy Simulation Hub</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="login.html">Fake Login</a>
+    </nav>
+  </header>
+  <main>
+    <p>This website is a <strong>safe demonstration</strong> for educational purposes. Nothing is real or stored.</p>
+    <a href="login.html" class="button">Go to Fake Login</a>
+  </main>
+  <footer>
+    <p>© 2025 Cybersecurity Education Project</p>
+  </footer>
+</body>
+</html>
+"""
+
+# HTML: login.html
+login_html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fake Login Page</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Simulated Login Page</h1>
+    <nav>
+      <a href="index.html">Home</a> |
+      <a href="login.html">Fake Login</a>
+    </nav>
+  </header>
+  <main>
+    <form action="simulate.php" method="POST">
+      <label for="username">Username or Phone:</label>
+      <input type="text" id="username" name="username" required>
+      
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      
+      <button type="submit" class="button">Login</button>
+    </form>
+    <p><em>This is not a real login. For training only.</em></p>
+  </main>
+  <footer>
+    <p>© 2025 Cybersecurity Education Project</p>
+  </footer>
+</body>
+</html>
+"""
+
+# PHP: simulate.php
+simulate_php = """<?php
+$username = htmlspecialchars($_POST['username']);
+$password = htmlspecialchars($_POST['password']);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Captured (Simulated)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Simulated Credential Capture</h1>
+  </header>
+  <main>
+    <p><strong>This is a simulated phishing page.</strong></p>
+    <p>You entered:</p>
+    <ul>
+      <li><strong>Username:</strong> <?= $username ?></li>
+      <li><strong>Password:</strong> <?= $password ?></li>
+    </ul>
+    <p>No data has been stored. This page is for awareness only.</p>
+    <a href="index.html" class="button">Back to Home</a>
+  </main>
+</body>
+</html>
+"""
+
+# CSS: style.css
+style_css = """body {
+  font-family: Arial, sans-serif;
+  background-color: #222;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+header, footer {
+  background-color: #444;
+  padding: 10px;
+}
+nav a {
+  color: #ff5555;
+  text-decoration: none;
+  margin: 0 10px;
+}
+nav a:hover {
+  color: #ff9999;
+}
+main {
+  padding: 20px;
+}
+.button {
+  background-color: #ff5555;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  margin: 10px;
+}
+form {
+  max-width: 300px;
+  margin: 20px auto;
+  text-align: left;
+}
+label {
+  display: block;
+  margin: 10px 0 5px;
+}
+input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+}"""
+
+# Save files
+with open(f"{base_dir}/index.html", "w") as f:
+    f.write(index_html)
+
+with open(f"{base_dir}/login.html", "w") as f:
+    f.write(login_html)
+
+with open(f"{base_dir}/simulate.php", "w") as f:
+    f.write(simulate_php)
+
+with open(f"{base_dir}/style.css", "w") as f:
+    f.write(style_css)
+
+# Create ZIP
+zip_path = "/mnt/data/spy-sim.zip"
+with ZipFile(zip_path, "w") as zipf:
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            zipf.write(os.path.join(root, file), arcname=os.path.relpath(os.path.join(root, file), base_dir))
+
+zip_path
